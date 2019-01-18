@@ -1,0 +1,638 @@
+module RockBand
+	(
+		CLOCK_50,						//	On Board 50 MHz
+		// Your inputs and outputs here
+		SW,								// On Board switches
+		KEY,		// On Board Keys
+		HEX0,
+		HEX1,
+		HEX2,
+		HEX3,
+		// The ports below are for the VGA output.  Do not change.
+		VGA_CLK,   						//	VGA Clock
+		VGA_HS,							//	VGA H_SYNC
+		VGA_VS,							//	VGA V_SYNC
+		VGA_BLANK_N,						//	VGA BLANK
+		VGA_SYNC_N,						//	VGA SYNC
+		VGA_R,   						//	VGA Red[9:0]
+		VGA_G,	 						//	VGA Green[9:0]
+		VGA_B   						//	VGA Blue[9:0]
+	);
+
+	input				CLOCK_50;
+	input	[3:0]		KEY;					
+	input [9:0]   	SW;
+	
+	output [6:0]    HEX0, HEX1, HEX2, HEX3;
+	output			VGA_CLK;   				//	VGA Clock
+	output			VGA_HS;					//	VGA H_SYNC
+	output			VGA_VS;					//	VGA V_SYNC
+	output			VGA_BLANK_N;			//	VGA BLANK
+	output			VGA_SYNC_N;				//	VGA SYNC
+	output [7:0]	VGA_R;   				//	VGA Red[7:0] Changed from 10 to 8-bit DAC
+	output [7:0]	VGA_G;	 				//	VGA Green[7:0]
+	output [7:0]	VGA_B;   				//	VGA Blue[7:0]
+	
+	// Create the colour, x, y and writeEn wires that are inputs to the controller.
+	
+	// Create an Instance of a VGA controller - there can be only one!
+	// Define the number of colours as well as the initial background
+	// image file (.MIF) for the controller.
+	vga_adapter VGA(
+			.resetn(resetn),
+			.clock(CLOCK_50),
+			.colour(final_color),
+			.x(x),
+			.y(y),
+			.plot(writeEn),
+			/* Signals for the DAC to drive the monitor. */
+			.VGA_R(VGA_R),
+			.VGA_G(VGA_G),
+			.VGA_B(VGA_B),
+			.VGA_HS(VGA_HS),
+			.VGA_VS(VGA_VS),
+			.VGA_BLANK(VGA_BLANK_N),
+			.VGA_SYNC(VGA_SYNC_N),
+			.VGA_CLK(VGA_CLK));
+		defparam VGA.RESOLUTION = "320x240";
+		defparam VGA.MONOCHROME = "FALSE";
+		defparam VGA.BITS_PER_COLOUR_CHANNEL = 3;
+		defparam VGA.BACKGROUND_IMAGE = "black.mif";
+			
+	// Put your code here. Your code should produce signals x,y,colour and writeEn
+	// for the VGA controller, in addition to any other functionality your design may require.
+	
+//	wire [7:0] blue, red, green, yellow;
+//	assign blue = 8'b1010000;
+//	assign red = 8'b1110111;
+//	assign green = 8'b10011110;
+//	assign yellow = 8'b11000101;
+	
+	wire [8:0] note_colour;
+	wire [9:0] x_note;
+	wire [9:0] y_note;
+	wire writeEn;
+	wire done_erase, done_draw, draw, erase, move, draw_background, draw_notes, note_plot, feed_ram, done_feed;
+	
+	assign writeEn = (erase || note_plot);
+	
+	control c0(
+				.clock(CLOCK_50),
+				.resetn(resetn),
+				.go(SW[7]),
+				.done_erase(done_erase),
+				.done_draw(done_draw),
+				.done_feed(done_feed),
+				.speed(speed),
+				
+				.draw(draw),
+				.erase(erase),
+				.feed(feed)
+				);
+	
+	datapath d0(
+			.clock(CLOCK_50),
+			.draw(draw),
+			.erase(erase),
+			.feed(feed),
+			
+			.draw_background(draw_background),
+			.draw_notes(draw_notes),
+			.feed_ram(feed_ram)
+			);
+	
+	wire [8:0] background_color;
+	wire [9:0] x_background, y_background;
+	wire [8:0] note, colour_in;
+	
+	wire [8:0] final_color = draw_background ? background_color : colour_in; 
+	wire [9:0] x = draw_background ? x_background : x_note; 
+	wire [9:0] y = draw_background ? y_background : y_note; 
+	
+	wire resetn;
+	assign resetn = KEY[0];
+	
+	load_background l0(.draw_background(draw_background), .resetn(~erase), .clock(CLOCK_50), 
+		.out_color(background_color), .done_erase(done_erase), .final_x(x_background), .final_y(y_background));
+	
+	load_song l1(.start(load_note), .resetn(resetn), .clock(CLOCK_50), .note(out_note));
+	
+	load_notes l2(.start_notes(draw_notes), .resetn(~draw), .clock(CLOCK_50), .out_color(colour_in),
+		.done_draw(done_draw), .final_x(x_note), .final_y(y_note), .note_plot(note_plot), .HEX0(HEX0), .HEX1(HEX1), .HEX2(HEX2), .HEX3(HEX3));
+		
+//	load_test l2(.start_notes(draw_notes), .resetn(~draw), .clock(CLOCK_50), .out_color(colour_in), 
+//		.done_draw(done_draw), .final_x(x_note), .final_y(y_note), .note_plot(note_plot));
+	
+	note_to_ram n0(.clock(CLOCK_50), .enable(feed_ram), .note_in(note), .done(done_feed));
+	
+	wire [25:0] speed;
+	difficulty d1(.data(SW[9:8]), .out(speed));
+	
+endmodule
+
+module control(clock, resetn, go, done_erase, done_draw, done_feed, speed, erase, draw, feed);
+	
+	input clock, resetn, go, done_erase, done_draw, done_feed;
+	input [25:0] speed;
+	output reg erase, draw, feed;
+
+	reg [5:0] current_state, next_state; 
+	
+	localparam  S_BEGIN  	  		= 5'd0,
+					S_ERASE       		= 5'd1,
+					S_FEED_RAM 			= 5'd2,
+					S_DRAW	 	 		= 5'd3,
+					S_WAIT 	      	= 5'd5;
+	
+	wire counter;
+	wire [25:0] w1;
+	assign counter = (w1 == 26'b0) ? 1 : 0;
+	
+	rate_divider u4Hz(
+				.clock(clock),
+				.enable(1'b1),
+				.load(speed),
+				.reset(~resetn),
+				.count(w1)
+				);
+ 
+	always @(*)
+	begin: state_table 
+			case (current_state)
+					S_BEGIN: next_state 		= go ? S_DRAW : S_BEGIN;
+					S_ERASE: next_state 		= done_erase ? S_DRAW : S_ERASE;
+					S_FEED_RAM: next_state 	= done_feed ? S_DRAW : S_FEED_RAM;
+					S_DRAW: next_state 		= done_draw ? S_WAIT : S_DRAW;
+					S_WAIT: next_state 		= counter ? S_DRAW : S_WAIT;
+					default: next_state 		= S_BEGIN;
+			endcase
+	end
+   
+	always @(*)
+	begin: enable_signals
+		erase = 1'b0;
+		feed = 1'b1;
+		draw = 1'b0;
+		
+		case (current_state)
+			S_ERASE: 	erase = 1'b1;
+			S_FEED_RAM: feed 	= 1'b1;
+			S_DRAW: 		draw 	= 1'b1;
+		endcase
+	end
+   
+	always@(posedge clock)
+	begin: state_FFs
+		if(!resetn)
+			current_state <= S_BEGIN;
+		else
+			current_state <= next_state;
+		end
+endmodule
+
+module datapath(clock, erase, draw, feed, draw_background, draw_notes, feed_ram);
+	
+	input clock, erase, draw, feed;
+	output reg draw_background, draw_notes, feed_ram;
+	
+	always @(posedge clock)
+	begin
+		draw_background <= 1'b0;
+		draw_notes <= 1'b0;
+		feed_ram <= 1'b0;
+		if (erase)
+			draw_background <= 1'b1;
+		else if (draw)
+			draw_notes <= 1'b1;
+		else if (feed)
+			feed_ram <= 1'b1;
+	end
+	
+endmodule
+
+module load_notes(start_notes, resetn, clock, out_color, done_draw, final_x, final_y, note_plot, HEX0, HEX1, HEX2, HEX3);
+	
+	input clock, resetn, start_notes;
+	output [6:0] HEX0, HEX1, HEX2, HEX3;
+	output reg [8:0] out_color; 
+	output [9:0] final_x, final_y;
+	output reg done_draw, note_plot;
+	
+	reg [9:0] counter_x;
+	reg [7:0] memory_address;
+	
+	wire [4:0] note;
+	
+	reg note_bit;
+	integer bit_counter, length;
+	always@(*)
+		note_bit <= note[4-bit_counter];
+		
+	hex_decoder H0(
+	  .hex_digit(bit_counter), 
+	  .segments(HEX0)
+	  );
+	
+	hex_decoder H1(
+	  .hex_digit(done_draw), 
+	  .segments(HEX1)
+	  );
+	  
+	hex_decoder H2(
+	  .hex_digit(memory_address[3:0]), 
+	  .segments(HEX2)
+	  );
+	 
+	 hex_decoder H3(
+	  .hex_digit(memory_address[7:4]), 
+	  .segments(HEX3)
+	  );
+		  
+	wire [25:0] w1;
+	assign counter = (w1 == 26'b0) ? 1 : 0;
+	
+	//assign fast = (speed == 1'b1) ? 26'd624999 : 26'd24999999;
+	
+	rate_divider u4Hz(
+				.clock(clock),
+				.enable(1'b1),
+				.load(26'd1),
+				.reset(resetn),
+				.count(w1)
+				);
+	
+	always@(posedge clock)
+	begin
+		if (resetn)
+		begin
+			length <= 0;
+			bit_counter <= 0;
+			out_color <= 9'b0;
+			done_draw <= 1'b0;
+			counter_x <= 10'b0001010000; // leftmost x value of the notes container
+			memory_address <= 8'b0;
+		end
+		
+		//	blue = 8'b01010000
+		//	red = 8'b01110111
+		//	green = 8'b10011110
+		//	yellow = 8'b11000101
+		// note length = 33
+		case (bit_counter)
+			0: begin // enable stage
+					if (!done_draw && start_notes) // skip whole row
+					begin
+						note_plot <= 1'b0;
+						length <= 0;
+						counter_x <= 10'b0;
+						if (note_bit == 1)
+						begin
+							memory_address <= memory_address + 1;
+							bit_counter <= 0;
+						end
+						else bit_counter <= 1;
+					end
+				end
+			1: out_color <= 9'b000000111; // Blue
+			2: out_color <= 9'b111000000; // Red
+			3: out_color <= 9'b000111000; // Green
+			4: out_color <= 9'b111111000; // Yellow
+			5: begin
+					bit_counter <= 0;
+					memory_address <= memory_address + 1;
+				end
+			default: begin
+				bit_counter <= 0;
+				end
+		endcase 
+		// first condition below is to check for an empty row --> skip
+		if (start_notes && !done_draw && bit_counter != 0)
+		begin
+			if (note_bit == 0) // skip note
+			begin
+				note_plot <= 1'b0;
+				bit_counter <= bit_counter + 1;
+				length <= 0;
+				counter_x <= counter_x + 10'd33 + 10'd5; //10'd5 is the gap between the notes;
+			end
+			
+			else if (note_bit == 1) // plot note
+			begin
+				if (length != 10'd33)
+				begin
+					counter_x <= counter_x + 1;
+					length <= length + 1;
+					note_plot <= 1'b1;
+				end
+				else if (length == 10'd33)
+				begin
+					note_plot <= 1'b0;
+					counter_x <= counter_x + 10'd5;
+					length <= 0;
+					bit_counter <= bit_counter + 1;
+				end
+			end
+		end
+		
+		if (start_notes && !done_draw && counter_x == 10'd230 && memory_address == 8'd255)
+				done_draw <= 1'b1;
+	end
+		
+	assign final_x = counter_x + 10'b0001010000;
+	assign final_y = memory_address + 10'd36;
+	
+	notes_display b0 (.address(memory_address), .clock(clock), .data(5'b0), .wren(1'b0), .q(note));
+endmodule
+
+//module load_test(start_notes, resetn, clock, out_color, done_draw, final_x, final_y, note_plot);
+//	
+//	input clock, resetn, start_notes;
+//	output reg [8:0] out_color; 
+//	output [9:0] final_x, final_y;
+//	output reg done_draw, note_plot;
+//	
+//	reg [9:0] counter_x;
+//	reg [7:0] memory_address;
+//	
+//	wire [3:0] note;
+//	
+//	always@(*)
+//		note_bit <= note[3-bit_counter];
+//	
+//	reg note_bit;
+//	
+//	integer bit_counter, length;
+//	
+//	always@(posedge clock)
+//	begin
+//		if (resetn)
+//		begin
+//			length <= 0;
+//			bit_counter <= 0;
+//			out_color <= 9'b0;
+//			done_draw <= 1'b0;
+//			counter_x <= 10'b0001010000; // leftmost x value of the notes container
+//			memory_address <= 8'b0;
+//		end
+//		
+//		//	blue = 8'b01010000
+//		//	red = 8'b01110111
+//		//	green = 8'b10011110
+//		//	yellow = 8'b11000101
+//		// note length = 33
+//		
+//		case (bit_counter)
+//			0: out_color <= 9'b000000111; // Blue
+//			1: out_color <= 9'b111000000; // Red
+//			2: out_color <= 9'b000111000; // Green
+//			3: out_color <= 9'b111111000; // Yellow
+//			default: out_color <= 9'b111000000; // Black?
+//		endcase 
+//		// first condition below is to check for an empty row --> skip
+//		if (start_notes && (bit_counter == 4) && !done_draw)
+//		begin
+//			note_plot <= 1'b0;
+//			length <= 0;
+//			bit_counter <= 0;
+//			counter_x <= 10'b0001010000;
+//			memory_address <= memory_address + 1;
+//		end
+//		
+//		else if (start_notes && !done_draw)
+//		begin
+//			if (note_bit == 0) // skip note
+//			begin
+//				note_plot <= 1'b0;
+//				length <= 0;
+//				counter_x <= counter_x + 10'd33 + 10'd5; //10'd5 is the gap between the notes;
+//			end
+//			
+//			else if (note_bit == 1) // plot note
+//			begin
+//				if (length != 10'd33)
+//				begin
+//					counter_x <= counter_x + 1;
+//					length <= length + 1;
+//					note_plot <= 1'b1;
+//				end
+//				else if (length == 10'd33)
+//				begin
+//					note_plot <= 1'b0;
+//					counter_x <= counter_x + 10'd5;
+//					bit_counter <= bit_counter + 1'b1;
+//					length <= 0;
+//				end
+//			end
+//			
+//			if (counter_x == 10'd230 && memory_address == 8'd255)
+//				done_draw <= 1'b1;
+//		end
+//		
+//	end
+//	assign final_x = counter_x;
+//	assign final_y = memory_address + 10'd36;
+//	
+//	test b0 (.address(memory_address), .clock(clock), .data(4'b0), .wren(1'b0), .q(note));
+//endmodule
+
+module note_to_ram(clock, enable, note_in, done);
+	input [4:0] note_in;
+	input clock, enable;
+	output done;
+	
+	wire out;
+	
+	reg wren, done;
+	reg [7:0] memory_address;
+	initial memory_address = 8'b0;
+	
+	reg [4:0] data_in;
+	initial data_in = 5'b0;
+	reg [4:0] temp;
+	initial temp = out;
+	
+	integer i;
+	
+	always@(*)
+	begin
+		done = 1'b0;
+		if (enable)
+		begin
+			for (i = 0; i <= 254; i = i + 2)
+			begin
+				// Getting value
+				wren = 1'b0;
+				memory_address = i;
+				data_in = temp;
+				memory_address = i + 1;
+				temp = out;
+				// Writing value
+				wren = 1'b1;
+				data_in = out;
+			end
+			// Write note to RAM
+			wren = 1'b1;
+			memory_address = 8'd0;
+			data_in = note_in;
+			done = 1'b1;
+		end
+		else
+		begin
+			wren = 1'b0;
+			data_in = 4'b0;
+			memory_address = 8'b0;
+			temp = out;
+		end
+			// Move addresses 1 address down
+//			if (memory_address != 8'd255)
+//			begin
+//				// Getting first data:
+//				wren = 1'b0;
+//				data_in = temp;
+//				// Shifting down 
+//				memory_address = memory_address + 1;
+//				wren = 1'b1;
+//				temp = out;
+//			end
+//			// Insert Note to RAM
+//			else
+//			begin
+//				wren = 1'b1;
+//				data_in = note_in;
+//				memory_address = 8'd0;
+//			end
+	end
+	
+	notes_display b0 (.address(memory_address), .clock(clock), .data(data_in), .wren(wren), .q(out));
+endmodule
+
+module load_song(start, resetn, clock, note, note);
+	input clock, resetn, start;
+	output reg [3:0] note;
+	
+	reg [7:0] memory_address;
+	
+	wire [3:0] out; // Make 4 bits since first bit is whether or not there is a note
+	
+	always@(posedge clock)
+	begin
+		if (resetn)
+		begin
+			memory_address <= 17'b0;
+			note <= 4'b0;
+		end
+			
+		if (start)
+		begin
+			note <= out;
+			memory_address <= memory_address + 1;
+		end
+		
+	end
+	
+	song1 b0 (.address(memory_address), .clock(clock), .data(4'b0), .wren(1'b0), .q(out));
+endmodule
+
+module load_background(draw_background, resetn, clock, out_color, done_erase, final_x, final_y);
+	
+	input clock, resetn, draw_background;
+	output reg [8:0] out_color; 
+	output [10:0] final_x, final_y;
+	output reg done_erase;
+	
+	reg [9:0] counter_x, counter_y, counter;
+	reg [16:0] memory_address;
+	
+	wire [8:0] color;
+	
+	always@(posedge clock)
+	begin
+		if (resetn)
+		begin
+			out_color <= 9'b0;
+			done_erase <= 1'b0;
+			counter_x <= 10'b0;
+			counter_y <= 10'b0;
+			memory_address <= 17'b0;
+		end
+			
+		if (draw_background && !done_erase)
+		begin
+			out_color <= color;
+			memory_address <= memory_address + 1;
+			if (counter_x < 10'd319)
+				counter_x <= counter_x + 1;
+			else if (counter_x == 10'd319 && counter_y < 10'd239)
+			begin
+				counter_x <= 10'b0;
+				counter_y <= counter_y + 1;
+			end
+			else if (counter_x == 10'd319 && counter_y == 10'd239)
+				done_erase <= 1'b1;
+		end
+		
+	end
+	assign final_x = counter_x - 3;
+	assign final_y = counter_y;
+	
+	Background_ram b0 (.address(memory_address), .clock(clock), .data(9'b0), .wren(1'b0), .q(color));
+endmodule
+
+module difficulty(data, out);
+	input [1:0] data;
+	output reg [25:0] out;
+	
+	always @(*) // declare always block
+	begin
+		case (data) // start case statement
+			2'b00: out = 26'd12499999; // easy
+			2'b01: out = 26'd6199999; // medium
+			2'b10: out = 26'd6199999; // hard
+			2'b11: out = 26'd6199999; // expert
+			default: out = 26'd6199999; // default case
+		endcase
+	end
+endmodule
+
+module rate_divider(clock, enable, load, reset, count);
+	input [25:0] load;
+	input clock, enable, reset;
+	output reg [25:0] count;
+	
+	always @(posedge clock, posedge reset)
+	begin
+		if(reset == 1'b1)
+			count <= load;
+		else if(count == 26'b0 && enable == 1'b1)
+			count <= load;
+		else if(enable == 1'b1)
+			count <= count - 1;
+	end
+endmodule
+
+module hex_decoder(
+    input [3:0] hex_digit, 
+    output reg [6:0] segments
+    );
+   
+    always @(*)
+        case (hex_digit)
+            4'h0: segments = 7'b100_0000;
+            4'h1: segments = 7'b111_1001;
+            4'h2: segments = 7'b010_0100;
+            4'h3: segments = 7'b011_0000;
+            4'h4: segments = 7'b001_1001;
+            4'h5: segments = 7'b001_0010;
+            4'h6: segments = 7'b000_0010;
+            4'h7: segments = 7'b111_1000;
+            4'h8: segments = 7'b000_0000;
+            4'h9: segments = 7'b001_1000;
+            4'hA: segments = 7'b000_1000;
+            4'hB: segments = 7'b000_0011;
+            4'hC: segments = 7'b100_0110;
+            4'hD: segments = 7'b010_0001;
+            4'hE: segments = 7'b000_0110;
+            4'hF: segments = 7'b000_1110;   
+            default: segments = 7'h7f;
+        endcase
+endmodule

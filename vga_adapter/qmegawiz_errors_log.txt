@@ -1,0 +1,10 @@
+
+
+W:/RockBand/vga_adapter/vga_pll.v
+
+Nov 12 05PM:49:02>: Error in CNX file format.
+
+Error messages are listed in file
+W:/RockBand/vga_adapter/vga_pll.cnxerr.
+
+Can't create the custom megafunction variation file(s)

@@ -1,0 +1,453 @@
+------------------------------------------------------------
+Timing Analyzer Summary
+------------------------------------------------------------
+
+Type  : Slow 1100mV 85C Model Setup 'load_score:lscore|current_place[0]'
+Slack : -20.350
+TNS   : -77.470
+
+Type  : Slow 1100mV 85C Model Setup 'load_score:finalscore|current_place[0]'
+Slack : -20.164
+TNS   : -76.802
+
+Type  : Slow 1100mV 85C Model Setup 'load_score:lwrong|current_place[0]'
+Slack : -17.433
+TNS   : -67.653
+
+Type  : Slow 1100mV 85C Model Setup 'load_score:lcorrect|current_place[0]'
+Slack : -16.999
+TNS   : -66.829
+
+Type  : Slow 1100mV 85C Model Setup 'datapath:datapath0|display_correct'
+Slack : -8.192
+TNS   : -235.807
+
+Type  : Slow 1100mV 85C Model Setup 'CLOCK_50'
+Slack : -5.117
+TNS   : -11767.189
+
+Type  : Slow 1100mV 85C Model Setup 'load_score:lhit|current_place[0]'
+Slack : -5.067
+TNS   : -19.680
+
+Type  : Slow 1100mV 85C Model Setup 'PS2_Controller:PS2|Altera_UP_PS2_Data_In:PS2_Data_In|received_data_en'
+Slack : -4.848
+TNS   : -41.836
+
+Type  : Slow 1100mV 85C Model Setup 'VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 31.906
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Hold 'CLOCK_50'
+Slack : 0.225
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Hold 'VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 0.437
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Hold 'load_score:finalscore|current_place[0]'
+Slack : 0.480
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Hold 'datapath:datapath0|display_correct'
+Slack : 0.657
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Hold 'load_score:lscore|current_place[0]'
+Slack : 0.793
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Hold 'load_score:lhit|current_place[0]'
+Slack : 0.845
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Hold 'load_score:lwrong|current_place[0]'
+Slack : 0.954
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Hold 'load_score:lcorrect|current_place[0]'
+Slack : 1.078
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Hold 'PS2_Controller:PS2|Altera_UP_PS2_Data_In:PS2_Data_In|received_data_en'
+Slack : 2.385
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'PS2_Controller:PS2|Altera_UP_PS2_Data_In:PS2_Data_In|received_data_en'
+Slack : -0.394
+TNS   : -5.262
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'datapath:datapath0|display_correct'
+Slack : 0.090
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'load_score:finalscore|current_place[0]'
+Slack : 0.135
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'load_score:lcorrect|current_place[0]'
+Slack : 0.276
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'load_score:lwrong|current_place[0]'
+Slack : 0.289
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'load_score:lhit|current_place[0]'
+Slack : 0.299
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'load_score:lscore|current_place[0]'
+Slack : 0.300
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'VGA|mypll|altpll_component|auto_generated|generic_pll1~FRACTIONAL_PLL|vcoph[0]'
+Slack : 1.666
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'CLOCK_50'
+Slack : 8.854
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 18.761
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Setup 'load_score:lscore|current_place[0]'
+Slack : -20.880
+TNS   : -79.900
+
+Type  : Slow 1100mV 0C Model Setup 'load_score:finalscore|current_place[0]'
+Slack : -20.720
+TNS   : -79.192
+
+Type  : Slow 1100mV 0C Model Setup 'load_score:lwrong|current_place[0]'
+Slack : -17.955
+TNS   : -69.669
+
+Type  : Slow 1100mV 0C Model Setup 'load_score:lcorrect|current_place[0]'
+Slack : -17.503
+TNS   : -68.889
+
+Type  : Slow 1100mV 0C Model Setup 'datapath:datapath0|display_correct'
+Slack : -8.271
+TNS   : -238.338
+
+Type  : Slow 1100mV 0C Model Setup 'load_score:lhit|current_place[0]'
+Slack : -5.119
+TNS   : -19.805
+
+Type  : Slow 1100mV 0C Model Setup 'PS2_Controller:PS2|Altera_UP_PS2_Data_In:PS2_Data_In|received_data_en'
+Slack : -4.982
+TNS   : -43.239
+
+Type  : Slow 1100mV 0C Model Setup 'CLOCK_50'
+Slack : -4.694
+TNS   : -10645.516
+
+Type  : Slow 1100mV 0C Model Setup 'VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 32.119
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Hold 'CLOCK_50'
+Slack : 0.060
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Hold 'load_score:finalscore|current_place[0]'
+Slack : 0.349
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Hold 'VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 0.419
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Hold 'datapath:datapath0|display_correct'
+Slack : 0.627
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Hold 'load_score:lhit|current_place[0]'
+Slack : 0.723
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Hold 'load_score:lwrong|current_place[0]'
+Slack : 0.748
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Hold 'load_score:lscore|current_place[0]'
+Slack : 0.753
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Hold 'load_score:lcorrect|current_place[0]'
+Slack : 0.979
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Hold 'PS2_Controller:PS2|Altera_UP_PS2_Data_In:PS2_Data_In|received_data_en'
+Slack : 2.548
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'PS2_Controller:PS2|Altera_UP_PS2_Data_In:PS2_Data_In|received_data_en'
+Slack : -0.394
+TNS   : -5.154
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'load_score:finalscore|current_place[0]'
+Slack : 0.150
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'datapath:datapath0|display_correct'
+Slack : 0.156
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'load_score:lcorrect|current_place[0]'
+Slack : 0.256
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'load_score:lscore|current_place[0]'
+Slack : 0.266
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'load_score:lwrong|current_place[0]'
+Slack : 0.268
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'load_score:lhit|current_place[0]'
+Slack : 0.343
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'VGA|mypll|altpll_component|auto_generated|generic_pll1~FRACTIONAL_PLL|vcoph[0]'
+Slack : 1.666
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'CLOCK_50'
+Slack : 8.799
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 18.738
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Setup 'load_score:lscore|current_place[0]'
+Slack : -10.626
+TNS   : -39.815
+
+Type  : Fast 1100mV 85C Model Setup 'load_score:finalscore|current_place[0]'
+Slack : -10.365
+TNS   : -39.120
+
+Type  : Fast 1100mV 85C Model Setup 'load_score:lwrong|current_place[0]'
+Slack : -9.056
+TNS   : -34.606
+
+Type  : Fast 1100mV 85C Model Setup 'load_score:lcorrect|current_place[0]'
+Slack : -8.658
+TNS   : -33.647
+
+Type  : Fast 1100mV 85C Model Setup 'datapath:datapath0|display_correct'
+Slack : -4.704
+TNS   : -123.972
+
+Type  : Fast 1100mV 85C Model Setup 'CLOCK_50'
+Slack : -3.823
+TNS   : -8194.693
+
+Type  : Fast 1100mV 85C Model Setup 'load_score:lhit|current_place[0]'
+Slack : -2.574
+TNS   : -9.900
+
+Type  : Fast 1100mV 85C Model Setup 'PS2_Controller:PS2|Altera_UP_PS2_Data_In:PS2_Data_In|received_data_en'
+Slack : -2.513
+TNS   : -21.343
+
+Type  : Fast 1100mV 85C Model Setup 'VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 34.867
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Hold 'CLOCK_50'
+Slack : 0.133
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Hold 'datapath:datapath0|display_correct'
+Slack : 0.134
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Hold 'VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 0.239
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Hold 'load_score:finalscore|current_place[0]'
+Slack : 0.295
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Hold 'load_score:lscore|current_place[0]'
+Slack : 0.528
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Hold 'load_score:lhit|current_place[0]'
+Slack : 0.561
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Hold 'load_score:lwrong|current_place[0]'
+Slack : 0.620
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Hold 'load_score:lcorrect|current_place[0]'
+Slack : 0.685
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Hold 'PS2_Controller:PS2|Altera_UP_PS2_Data_In:PS2_Data_In|received_data_en'
+Slack : 1.141
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'PS2_Controller:PS2|Altera_UP_PS2_Data_In:PS2_Data_In|received_data_en'
+Slack : 0.132
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'datapath:datapath0|display_correct'
+Slack : 0.182
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'load_score:finalscore|current_place[0]'
+Slack : 0.276
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'load_score:lcorrect|current_place[0]'
+Slack : 0.287
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'load_score:lhit|current_place[0]'
+Slack : 0.370
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'load_score:lscore|current_place[0]'
+Slack : 0.373
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'load_score:lwrong|current_place[0]'
+Slack : 0.387
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'VGA|mypll|altpll_component|auto_generated|generic_pll1~FRACTIONAL_PLL|vcoph[0]'
+Slack : 1.666
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'CLOCK_50'
+Slack : 8.786
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 18.881
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Setup 'load_score:lscore|current_place[0]'
+Slack : -9.964
+TNS   : -37.590
+
+Type  : Fast 1100mV 0C Model Setup 'load_score:finalscore|current_place[0]'
+Slack : -9.741
+TNS   : -36.981
+
+Type  : Fast 1100mV 0C Model Setup 'load_score:lwrong|current_place[0]'
+Slack : -8.591
+TNS   : -32.765
+
+Type  : Fast 1100mV 0C Model Setup 'load_score:lcorrect|current_place[0]'
+Slack : -8.264
+TNS   : -31.870
+
+Type  : Fast 1100mV 0C Model Setup 'datapath:datapath0|display_correct'
+Slack : -4.336
+TNS   : -116.306
+
+Type  : Fast 1100mV 0C Model Setup 'CLOCK_50'
+Slack : -3.093
+TNS   : -6519.688
+
+Type  : Fast 1100mV 0C Model Setup 'PS2_Controller:PS2|Altera_UP_PS2_Data_In:PS2_Data_In|received_data_en'
+Slack : -2.399
+TNS   : -20.478
+
+Type  : Fast 1100mV 0C Model Setup 'load_score:lhit|current_place[0]'
+Slack : -2.388
+TNS   : -9.200
+
+Type  : Fast 1100mV 0C Model Setup 'VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 35.441
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Hold 'CLOCK_50'
+Slack : 0.119
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Hold 'load_score:finalscore|current_place[0]'
+Slack : 0.226
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Hold 'VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 0.227
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Hold 'datapath:datapath0|display_correct'
+Slack : 0.273
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Hold 'load_score:lwrong|current_place[0]'
+Slack : 0.462
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Hold 'load_score:lhit|current_place[0]'
+Slack : 0.464
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Hold 'load_score:lscore|current_place[0]'
+Slack : 0.475
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Hold 'load_score:lcorrect|current_place[0]'
+Slack : 0.580
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Hold 'PS2_Controller:PS2|Altera_UP_PS2_Data_In:PS2_Data_In|received_data_en'
+Slack : 1.151
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'PS2_Controller:PS2|Altera_UP_PS2_Data_In:PS2_Data_In|received_data_en'
+Slack : 0.144
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'datapath:datapath0|display_correct'
+Slack : 0.243
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'load_score:finalscore|current_place[0]'
+Slack : 0.313
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'load_score:lcorrect|current_place[0]'
+Slack : 0.328
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'load_score:lscore|current_place[0]'
+Slack : 0.375
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'load_score:lwrong|current_place[0]'
+Slack : 0.390
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'load_score:lhit|current_place[0]'
+Slack : 0.402
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'VGA|mypll|altpll_component|auto_generated|generic_pll1~FRACTIONAL_PLL|vcoph[0]'
+Slack : 1.666
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'CLOCK_50'
+Slack : 8.778
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'VGA|mypll|altpll_component|auto_generated|generic_pll1~PLL_OUTPUT_COUNTER|divclk'
+Slack : 18.881
+TNS   : 0.000
+
+------------------------------------------------------------
